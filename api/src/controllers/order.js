@@ -3,12 +3,9 @@ const Order = require("../db/models/order.model");
 const OrderItem = require("../db/models/order-item.model");
 
 const notify = async (order) => {
-    console.log("Notify");
-    console.log(order);
     try {
         const updatedOrder = await Order.updateById(order.id, { clientId: order.client_id, status: "Ready To Pickup", total: order.total, deal: order.deal });
-        global.io.emit(`order.client_id`, updatedOrder);
-        console.log("updatedOrder", updatedOrder);
+        global.io.emit(order.client_id, updatedOrder);
     } catch (err) {
         return;
     }
@@ -72,7 +69,5 @@ module.exports = {
             }
             res.send(allOrders);
         });
-
-
     },
 };

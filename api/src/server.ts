@@ -4,11 +4,13 @@ const bodyParser = require("body-parser");
 // import * as socketio from "socket.io";
 // const types = require("@types/socket.io");
 const orderRoutes = require("./routes/order");
+const cors = require("cors");
 
 const port = process.env.NODE_PORT || 4848;
 
 export function run() {
   const app = express();
+  app.use(cors());
   let http = require("http").Server(app);
   let io = require("socket.io")(http);
   require("./channels")(io);
