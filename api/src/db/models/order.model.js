@@ -33,11 +33,9 @@ const Order = function (order) {
 Order.create = (newCustomer, result) => {
     sql.query("INSERT INTO orders SET ?", newCustomer, (err, res) => {
         if (err) {
-            console.log("error: ", err);
             result(err, null);
             return;
         }
-        console.log("created order: ", { id: res.insertId, ...newCustomer });
         result(null, { id: res.insertId, ...newCustomer });
     });
 };
@@ -54,14 +52,10 @@ Order.findById = async (id) => {
 Order.getAllByClientId = (clientId, result) => {
     sql.query("SELECT o.id as order_id, o.deal as order_deal,o.status as order_status, o.total as order_total,oi.id as item_id, oi.item_id as item_item_id, oi.count as item_count FROM adfoodio.orders o join order_items oi on o.id = oi.order_id WHERE o.client_id = ?", [clientId], (err, allOrders) => {
         if (err) {
-            console.log("error: ", err);
             result(err, null);
             return;
         }
         const response = joinjs.map(allOrders, resultMaps, 'orderMap', 'order_');
-        response.map(odr => {
-            console.log(JSON.stringify(odr));
-        });
         result(null, response);
     });
 };

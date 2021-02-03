@@ -1,59 +1,45 @@
-import { Accordion, AccordionDetails, AccordionSummary, Tab, Tabs, Typography } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import allItems from "../all-items";
 import { Orders } from "../types";
+import { Alert } from '@material-ui/lab';
+import { baseURL } from "../config";
 
 
-const OrderStatus = () => {
+
+const OrderStatus = ({ updateOrders, setUpdateOrders }: any) => {
     let menu = allItems;
     const [orders, setOrders] = useState<Orders[]>();
+    const [error, setError] = useState(false);
     useEffect(() => {
-        async function getOrders() {
-            let uID = window.sessionStorage.getItem("uID");
-            await axios.get(`http://localhost:4848/api/orders/all/${uID}`).then(res => {
-                debugger;
-                setOrders(res.data);
-            }).catch(err => { console.log(); });
-        }
         getOrders();
     }, []);
 
-    // useEffect(() => {
+    useEffect(() => {
+        if (updateOrders) {
+            getOrders();
+        }
+    }, [updateOrders]);
 
-    // }, [updatedOrders]);
-
+    const getOrders = async () => {
+        let uID = window.sessionStorage.getItem("uID");
+        await axios.get(`${baseURL}api/orders/all/${uID}`).then(res => {
+            setError(false);
+            setOrders(res.data);
+            setUpdateOrders(false);
+        }).catch(err => {
+            setError(true);
+        });
+    };
 
     const getItem = (itemID: number) => {
         let item = menu.find(({ id }) => id == itemID);
         return item;
     };
 
-    const getItems = (items: any) => {
-        let itemArr = [];
-        if (items.length) {
-            for (const data of items) {
-                let item = getItem(data.id);
-                itemArr.push(item);
-            }
-        }
-        return itemArr;
-    };
-
-    const getOrderTotal = (orderItems: any) => {
-        // let items = getItems(orderItems);
-        let total = 0;
-        for (const orderItem of orderItems) {
-            let item = menu.find(({ id }) => id == orderItem.itemID);
-            if (item) {
-                total += item.price * orderItem.count;
-            }
-        }
-        return total;
-    };
-
     return (
-        <>
+        <>  {error && <Alert severity="error">Something went wrong in fetching orders</Alert>}
             {orders && orders.map((order) => {
                 // let total = getOrderTotal(order.items);
                 return <Accordion square key={order.id}>

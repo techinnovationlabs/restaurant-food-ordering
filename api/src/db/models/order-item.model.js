@@ -19,7 +19,6 @@ OrderItems.create = async (newOrderItem) => {
 OrderItems.getAllByOrderId = async (orderId, result) => {
     sql.query(`SELECT * FROM order_items WHERE order_id = ${1}`, (err, res) => {
         if (err) {
-            console.log("error: ", err);
             result(err, null);
             return;
         }

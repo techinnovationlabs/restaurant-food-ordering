@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import allItems from "../all-items";
 import { OrderItem, Item, OfferItems } from "../types";
 import axios from 'axios';
+import { baseURL } from "../config";
 
 const Menu = () => {
 
@@ -114,7 +115,7 @@ const Menu = () => {
                     let lessPricedMain = getLessPricedItem(mains);
                     let lessPricedDrink = getLessPricedItem(drinks);
                     let lessPricedDessert = getLessPricedItem(desserts);
-                    offItems = { offer1: [], offer2: [{ lessPricedMain, 1}, lessPricedDrink, lessPricedDessert] };
+                    offItems = { offer1: [], offer2: [lessPricedMain, lessPricedDrink, lessPricedDessert] };
                     setOfferItems(offItems);
                 }
             }
@@ -208,7 +209,7 @@ const Menu = () => {
             deal: "Hot Offer 10%",
             items: orderItems
         };
-        const res = await axios.post(`http://localhost:4848/api/orders/${uID}`, orderDetails);
+        const res = await axios.post(`${baseURL}api/orders/${uID}`, orderDetails);
         console.log(res);
     };
 

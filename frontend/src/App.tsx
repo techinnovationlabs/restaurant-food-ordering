@@ -5,24 +5,27 @@ import { AppBar, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import Menu from './pages/menu';
 import OrderStatus from './pages/order-status';
 import { io as socketIOClient } from 'socket.io-client';
+import { baseURL } from './config';
+import { Alert } from '@material-ui/lab';
+
 
 function App() {
-
+  const [updateOrders, setUpdateOrders] = useState(false);
+  const [notification, setNotification] = useState("");
   useEffect(() => {
     let socket: any;
-    socket = socketIOClient("http://localhost:4848/", {
+    socket = socketIOClient(baseURL, {
       transports: ["websocket"],
     });
     socket.on("request", (data: any) => {
       console.log("Connected Successfully!.");
     });
-    console.log(window.sessionStorage.getItem("uID"));
     socket.on(window.sessionStorage.getItem("uID"), (data: any) => {
-      console.log("websocket");
-      console.log(data);
-      // fetchPhotographerTodayShoots(photographerId);
+      setNotification(`OrderId ${data[1]} is ready to pickup`);
+      setTimeout(() => setNotification(""), 5000);
+      setUpdateOrders(true);
     });
-  });
+  }, []);
 
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -39,6 +42,7 @@ function App() {
         </Typography>
         </Toolbar>
       </AppBar>
+      {notification && <Alert severity="success">{notification}</Alert>}
       <AppBar position="static" style={{ backgroundColor: 'grey' }}>
         <Tabs
           value={tabIndex}
@@ -49,7 +53,7 @@ function App() {
         </Tabs>
       </AppBar>
       {
-        tabIndex === 0 ? <Menu /> : <OrderStatus />
+        tabIndex === 0 ? <Menu /> : <OrderStatus updateOrders={updateOrders} setUpdateOrders={setUpdateOrders} />
       }
     </div>
   );
