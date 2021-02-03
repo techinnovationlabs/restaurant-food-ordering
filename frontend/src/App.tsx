@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.png';
 import './App.css';
 import { AppBar, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import Menu from './pages/menu';

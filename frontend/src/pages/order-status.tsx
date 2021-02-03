@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq */
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -5,8 +6,6 @@ import allItems from "../all-items";
 import { Orders } from "../types";
 import { Alert } from '@material-ui/lab';
 import { baseURL } from "../config";
-
-
 
 const OrderStatus = ({ updateOrders, setUpdateOrders }: any) => {
     let menu = allItems;
