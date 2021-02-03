@@ -1,0 +1,39 @@
+{
+  "include": [
+    "src",
+    "config"
+  ],
+  "exclude": [
+    "coverage"
+  ],
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "ES2015", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */
+    "lib": [
+      "es2015"
+    ], /* Specify library files to be included in the compilation. */
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
+    "declaration": false, /* Generates corresponding '.d.ts' file. */
+    "outDir": "./dist", /* Redirect output structure to the directory. */
+    /* Strict Type-Checking Options */
+    /* Additional Checks */
+    "strict": true,
+    "skipLibCheck": true,
+    "preserveSymlinks": true,
+    "resolveJsonModule": true,
+    "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "rootDirs": ["src"],
+    /* Module Resolution Options */
+    "moduleResolution": "node", /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
+    "esModuleInterop": true,
+    // "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
+    // "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */ 
+  }
+}

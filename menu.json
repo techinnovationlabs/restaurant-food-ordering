@@ -1,0 +1,52 @@
+{
+  "food": [
+    {
+      "name": "Avo on toast",
+      "price": 850
+    },
+    {
+      "name": "Pesto pasta with pine nuts and mozzarella",
+      "price": 950
+    },
+    {
+      "name": "Roasted pork belly with kimchi and soy sauce glaze",
+      "price": 1100
+    },
+    {
+      "name": "Mac and cheese with crunchy seitan ‘bacon’ (V)",
+      "price": 1000
+    }
+  ],
+  "drink": [
+    {
+      "name": "Gin and Tonic",
+      "price": 905
+    },
+    {
+      "name": "White Russian",
+      "price": 920
+    },
+    {
+      "name": "Mojito",
+      "price": 800
+    },
+    {
+      "name": "Old Fashioned",
+      "price": 900
+    }
+  ],
+  "dessert": [
+    {
+      "name": "Option A",
+      "price": 720
+    },
+    {
+      "name": "Option B",
+      "price": 750
+    },
+    {
+      "name": "Option C",
+      "price": 680
+    }
+  ]
+}

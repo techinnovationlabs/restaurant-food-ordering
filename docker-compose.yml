@@ -1,0 +1,68 @@
+version: "3.7"
+
+services: 
+
+  api:
+    build: 
+      context: ./api
+    command: npm run start:watch
+    links: 
+      - nginx:api.adfoodio.site
+      - redis  
+      - mysql
+    environment:
+      - VIRTUAL_HOST=api.adfoodio.site
+      - VIRTUAL_PORT=4848
+    volumes: 
+      - ./api:/api
+    logging: 
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  ######################################################################################################
+  ################ Services ############################################################################
+  ######################################################################################################
+
+  # Local webserver for resolving domain names
+  nginx:
+    image: jwilder/nginx-proxy:alpine
+    container_name: nginx
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+      - ./conf-nginx-default.conf:/etc/nginx/vhost.d/default
+      - ./conf-nginx-default.conf:/etc/vhost.d/default
+    ports:
+      - 80:80
+
+  ######################################################################################################
+  ################ Databases ###########################################################################
+  ######################################################################################################
+
+  redis:
+    image: redis:4-alpine
+    ports:
+      - 6379:6379
+    volumes:
+        - ./cache/redis:/data
+    command: redis-server
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    expose:
+      - '3306'
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
+    volumes:
+        - ./cache/mysql:/var/lib/mysql
+        - ./conf-mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_USER=root
+      - MYSQL_DATABASE=adfoodio
+    restart: unless-stopped

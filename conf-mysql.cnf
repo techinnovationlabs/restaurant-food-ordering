@@ -1,0 +1,4 @@
+# This config is to enable you to connect to the MYSQL instance outside of docker
+
+[mysqld]
+bind-address=0.0.0.0
