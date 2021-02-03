@@ -7,7 +7,6 @@ import { io as socketIOClient } from 'socket.io-client';
 import { baseURL } from './config';
 import { Alert } from '@material-ui/lab';
 
-
 function App() {
   const [updateOrders, setUpdateOrders] = useState(false);
   const [notification, setNotification] = useState("");

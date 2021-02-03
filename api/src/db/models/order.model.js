@@ -29,7 +29,6 @@ const Order = function (order) {
     this.deal = order.deal;
 };
 
-
 Order.create = (newCustomer, result) => {
     sql.query("INSERT INTO orders SET ?", newCustomer, (err, res) => {
         if (err) {
