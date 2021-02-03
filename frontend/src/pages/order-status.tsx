@@ -52,7 +52,10 @@ const OrderStatus = ({ updateOrders, setUpdateOrders }: any) => {
                     <AccordionDetails>
                         <div>
                             {order.deal.length ? <Typography>
-                                {"Offer Applied: "}{order.deal}
+                                {
+                                    order.deal.length ? <Typography>Offer Applied: {order.deal}</Typography> : null
+                                }
+
                             </Typography> : null}
                             <Typography style={{ marginBottom: 10, marginTop: 10 }}>
                                 Ordered Items:
@@ -62,7 +65,7 @@ const OrderStatus = ({ updateOrders, setUpdateOrders }: any) => {
                                 return (
                                     <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', marginBottom: 10 }}>
                                         <Typography style={{ width: "35%" }}>{item?.name}</Typography>
-                                        <Typography>{" $"}{item?.price ? (item.price / 100).toFixed(2) : 0}</Typography>
+                                        <Typography>{" $"}{item?.price ? item.price : 0.00}</Typography>
                                         <Typography>{" X "}{count}</Typography>
                                     </div>
                                 );

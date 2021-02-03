@@ -2,25 +2,25 @@ export default [
     {
         "id": 0,
         "name": "Avo on toast",
-        "price": 850,
+        "price": 8.50,
         "category": "food",
     },
     {
         "id": 1,
         "name": "Pesto pasta with pine nuts and mozzarella",
-        "price": 950,
+        "price": 9.50,
         "category": "food"
     },
     {
         "id": 2,
         "name": "Roasted pork belly with kimchi and soy sauce glaze",
-        "price": 1100,
+        "price": 11.00,
         "category": "food"
     },
     {
         "id": 3,
         "name": "Mac and cheese with crunchy seitan ‘bacon’ (V)",
-        "price": 1000,
+        "price": 10.00,
         "category": "food"
     }
     ,
@@ -28,25 +28,25 @@ export default [
     {
         "id": 4,
         "name": "Gin and Tonic",
-        "price": 905,
+        "price": 9.05,
         "category": "drink"
     },
     {
         "id": 5,
         "name": "White Russian",
-        "price": 920,
+        "price": 9.20,
         "category": "drink"
     },
     {
         "id": 6,
         "name": "Mojito",
-        "price": 800,
+        "price": 8.00,
         "category": "drink"
     },
     {
         "id": 7,
         "name": "Old Fashioned",
-        "price": 900,
+        "price": 9.00,
         "category": "drink"
     }
     ,
@@ -54,19 +54,19 @@ export default [
     {
         "id": 8,
         "name": "Option A",
-        "price": 720,
+        "price": 7.20,
         "category": "dessert"
     },
     {
         "id": 9,
         "name": "Option B",
-        "price": 750,
+        "price": 7.50,
         "category": "dessert"
     },
     {
         "id": 10,
         "name": "Option C",
-        "price": 680,
+        "price": 6.80,
         "category": "dessert"
     }
 ];

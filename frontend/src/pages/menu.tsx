@@ -1,5 +1,5 @@
 /*eslint-disable eqeqeq */
-import { AppBar, Button, Card, Tab, Tabs, Typography } from "@material-ui/core";
+import { AppBar, Button, Tab, Tabs, Typography } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import React, { useEffect, useState } from "react";
@@ -72,16 +72,6 @@ const Menu = () => {
         return 0;
     };
 
-    const getItemsCount = (items: Item[]) => {
-        let count = 0;
-        if (items.length) {
-            for (const item of items) {
-                count += getCount(item.id);
-            }
-        }
-        return count;
-    };
-
     const getLessPricedItem = (items: Item[]) => {
         return items.sort((item1, item2) => item1.price - item2.price)[0];
     };
@@ -90,13 +80,11 @@ const Menu = () => {
         let itemArr = [...items];
         let list = [];
         for (let i = 1; i <= limit; i++) {
+
             let item = getLessPricedItem(items);
             let index = itemArr.findIndex(({ id }) => id == item.id);
             itemArr.splice(index, 1);
-            let isPresent = list.find(({ id }) => item.id == id);
-            if (!isPresent) {
-                list.push(item);
-            }
+            list.push(item);
         }
         return list;
     };
@@ -105,20 +93,18 @@ const Menu = () => {
         let offItems: OfferItems = { offer1: [], offer2: [] };
         if (cartItems.length) {
             let mains = cartItems.filter(({ category }) => category === "food");
-            let mainsCount = getItemsCount(mains);
+            let mainsCount = mains.length;
             let drinks = cartItems.filter(({ category }) => category === "drink");
-            let drinksCount = getItemsCount(drinks);
+            let drinksCount = drinks.length;
             let desserts = cartItems.filter(({ category }) => category === "dessert");
-            let dessertsCount = getItemsCount(desserts);
+            let dessertsCount = desserts.length;
             //offer2
-            if (mainsCount && drinksCount && dessertsCount) {
-                if (mainsCount >= 2 && drinksCount >= 2) {
-                    let lessPricedMain = getLessPricedItem(mains);
-                    let lessPricedDrink = getLessPricedItem(drinks);
-                    let lessPricedDessert = getLessPricedItem(desserts);
-                    offItems = { offer1: [], offer2: [lessPricedMain, lessPricedDrink, lessPricedDessert] };
-                    setOfferItems(offItems);
-                }
+            if (mainsCount >= 2 && drinksCount >= 2 && dessertsCount >= 1) {
+                let lessPricedMains = getLessPricedItems(mains, 2);
+                let lessPricedDrinks = getLessPricedItems(drinks, 2);
+                let lessPricedDessert = getLessPricedItem(desserts);
+                offItems = { offer1: [], offer2: [...lessPricedMains, ...lessPricedDrinks, lessPricedDessert] };
+                setOfferItems(offItems);
             }
             //offer 1
             else if (mainsCount && drinksCount) {
@@ -134,64 +120,59 @@ const Menu = () => {
                     offItems = { offer1: [...lessPricedDrinks, ...mains], offer2: [] };
                     setOfferItems(offItems);
                 }
-            } else {
-                setOfferItems(offItems);
             }
         }
         return offItems;
     };
 
-    const getItems = (itemIDs: number[]) => {
+    const getItems = (orderItems: OrderItem[]) => {
         let items = [];
-        for (const itemID of itemIDs) {
-            let item = menu.find(({ id }) => id == itemID);
+        for (const orderItem of orderItems) {
+            let item = menu.find(({ id }) => id == orderItem.id);
             if (item) {
-                items.push(item);
+                for (let i = 0; i < orderItem.count; i++) {
+                    items.push(item);
+                }
             }
         }
         return items;
     };
 
-    const getOrderItemIDs = () => {
-        let IDs = [];
-        for (const orderItem of orderItems) {
-            if (orderItem.count) {
-                let isPresent = IDs.find((id) => id == orderItem.id);
-                if (!isPresent) {
-                    IDs.push(orderItem.id);
-                }
-            }
-        }
-        return IDs;
-    };
-
     const getTotal = () => {
-
-        let IDs = getOrderItemIDs();
-        let cartItems = getItems(IDs);
-        // let offItems = applyOffers(cartItems);
-        // console.log("off", offItems.offer1);
-        // console.log("cart", cartItems);
-        // if (offItems.offer1.length) {
-        //     let cartItemArr = [...cartItems];
-        //     let offItemsPrice = 0;
-        //     // let cartItemsPrice = 0;
-        //     for (const offItem of offItems.offer1) {
-        //         let index = cartItemArr.findIndex(({ id }) => id == offItem.id);
-        //         cartItemArr.splice(index, 1);
-        //         offItemsPrice += (offItem.price - (offItem.price / 10));
-        //     }
-        //     console.log((offItemsPrice / 100).toFixed(2), cartItemArr);
-        //     // return;
-        // }
+        let cartItems = getItems(orderItems);
+        let offItems = applyOffers(cartItems);
         let cartItemsPrice = 0;
-        for (const cartItem of cartItems) {
-            let orderItem = getOrderItem(cartItem.id);
-            let count = orderItem ? orderItem.count : 1;
-            cartItemsPrice += cartItem.price * count;
+        if (offItems.offer1.length) {
+            let cartItemArr = [...cartItems];
+            let offItemsPrice = 0;
+            for (const offItem of offItems.offer1) {
+                let index = cartItemArr.findIndex(({ id }) => id == offItem.id);
+                cartItemArr.splice(index, 1);
+                offItemsPrice += (offItem.price - (offItem.price / 10));
+            }
+            for (const cartItem of cartItemArr) {
+                cartItemsPrice += cartItem.price;
+            }
+            setTotal(offItemsPrice + cartItemsPrice);
+        } else if (offItems.offer2.length) {
+            let cartItemArr = [...cartItems];
+            for (const offItem of offItems.offer2) {
+                let index = cartItemArr.findIndex(({ id }) => id == offItem.id);
+                cartItemArr.splice(index, 1);
+            }
+            for (const cartItem of cartItemArr) {
+                cartItemsPrice += cartItem.price;
+            }
+            setTotal(40 + cartItemsPrice);
+        } else {
+            let cartItemsPrice = 0;
+            for (const cartItem of cartItems) {
+                let orderItem = getOrderItem(cartItem.id);
+                let count = orderItem ? orderItem.count : 1;
+                cartItemsPrice += cartItem.price * count;
+            }
+            setTotal(cartItemsPrice);
         }
-        setTotal(cartItemsPrice);
-        return cartItemsPrice;
     };
 
     const loadFromStorage = () => {
@@ -205,24 +186,27 @@ const Menu = () => {
     };
 
     const handleSubmit = async () => {
+        let deal = "";
+        if (offerItems.offer1.length) {
+            deal = "Hot offer! Get 10% off each main and drink combo.";
+        } else if (offerItems.offer2.length) {
+            deal = "Hungry Date Offer! Get 2 mains + 2 drinks + 1 dessert for 40.00.";
+        }
         let orderDetails = {
             total,
-            deal: "Hot Offer 10%",
+            deal,
             items: orderItems
         };
-        const res = await axios.post(`${baseURL}api/orders/${uID}`, orderDetails);
-        console.log(res);
+        await axios.post(`${baseURL}api/orders/${uID}`, orderDetails);
     };
 
     const setUserID = () => {
         let cache = storage.getItem('uID');
         let data = cache ? cache : null;
-        console.log(data);
         if (data) {
             let storedUID = data;
             setUID(storedUID);
         } else {
-            console.log("else");
             let uID = '_' + Math.random().toString(36).substr(2, 9);
             setUID(uID);
             storage.setItem('uID', uID);
@@ -237,7 +221,6 @@ const Menu = () => {
 
     useEffect(() => {
         if (orderItems.length) {
-            console.log("calling getTotal");
             getTotal();
         }
     }, [orderItems]);
@@ -249,9 +232,9 @@ const Menu = () => {
 
     let ItemList = (props: any) => {
         return props.items?.length ? props.items.map((item: Item) => {
-            return <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            return <div key={item.id.toString()} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                 <span>{item?.name}</span>
-                <span style={{ marginLeft: 10 }}>${(item?.price / 100).toFixed(2)}</span>
+                <span style={{ marginLeft: 10 }}>${item?.price}</span>
                 <div>
                     <Button
                         onClick={() => decreaseCount(item)}
@@ -292,7 +275,7 @@ const Menu = () => {
                     Grand Total
                 </Typography>
                 <Typography variant="h6">
-                    ${(total / 100).toFixed(2)}
+                    ${total.toFixed(2)}
                 </Typography>
             </AppBar>
             <Button variant="contained" color="primary" style={{ marginTop: 10 }} onClick={handleSubmit}>
